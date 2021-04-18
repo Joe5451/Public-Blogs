@@ -1,0 +1,29 @@
+<nav class="navbar">
+    <a href="/" class="logo-link">Public Blogs</a>
+    <label for="menu" class="menu-toggle">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+    </label>
+    <input type="checkbox" id="menu">
+    <ul class="menu">
+        <li><a href="/blogs">部落格</a></li>
+        <% if (user) { %>
+            <li><a href="/logout">登出</a></li>
+            <li><a href="/po-blog">po 文</a></li>
+            <li><a href="/my-blogs">我的 blogs</a></li>
+            <li class="user">
+                <span class="<%= user.gender %>">
+                    <i class="fas fa-<%= user.gender %>"></i>
+                </span>
+                <p>
+                    <span class="name"><%= user.name %></span>
+                    <span class="email">(<%= user.email %>)</span>
+                </p>
+            </li>
+        <% } else { %>
+            <li><a href="/signup">註冊</a></li>
+            <li><a href="/login">登入</a></li>
+        <% } %>
+    </ul>
+</nav>

@@ -1,0 +1,27 @@
+.edit-form {
+    @include form;
+
+    .btn-container {
+        display: flex;
+    }
+
+    .update-blog.btn, .delete-blog.btn {
+        width: 50%;
+    }
+
+    .update-blog.btn {
+        background: linear-gradient(45deg, #00B8D4, #00E5FF, #18FFFF);
+
+        &:hover {
+            background: linear-gradient(45deg, #0091EA, #00B0FF, #40C4FF);
+        }
+    }
+
+    .delete-blog.btn {
+        background: linear-gradient(45deg, #F50057, #FF4081, #FF80AB);
+
+        &:hover {
+            background: linear-gradient(45deg, #C2185B, #E91E63, #EC407A);
+        }
+    }
+}

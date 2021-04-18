@@ -1,0 +1,11 @@
+.login-form {
+    @include form;
+
+    button.login.btn {
+        background: linear-gradient(45deg, #EC407A, #F06292, #F8BBD0);
+
+        &:hover {
+            background: linear-gradient(45deg, #F50057, #FF4081, #FF80AB);
+        }
+    }
+}

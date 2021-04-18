@@ -1,0 +1,11 @@
+.poBlog-form {
+    @include form;
+
+    button.poBlog.btn {
+        background: linear-gradient(45deg, #039BE5, #03A9F4, #81D4FA);
+
+        &:hover {
+            background: linear-gradient(45deg, #01579B, #0288D1, #03A9F4);
+        }
+    }
+}

@@ -1,0 +1,53 @@
+<%- include('./partials/head.ejs') %>
+<%- include('./partials/nav.ejs') %>
+<div class="wrapper">
+    <h1>我的 blogs</h1>
+    <div class="blogs-container">
+        <% if (blogs.length > 0) { %>
+            <% blogs.forEach( blog => { %>
+                <div class="blog-container">
+                    <div class="blog-head">
+                        <span class="author-gender <%= author.gender %>">
+                            <i class="fas fa-<%= author.gender %>"></i>
+                        </span>
+                        <p class="author">
+                            <span class="name"><%= author.name %></span>
+                            <span class="email">(<%= author.email %>)</span>
+                        </p>
+                    </div>
+                    <div class="blog-body specific-blog-link" data-doc="<%= blog._id %>">
+                        <h3 class="title"><%= blog.title %></h3>
+                        <pre><%= blog.body %></pre>
+                    </div>
+                    <div class="blog-footer">
+                        <a class="edit-btn" href="/edit-blog/<%= blog._id %>"><i class="far fa-edit"></i>編輯</a>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+</div>
+<%- include('./partials/footer.ejs') %>
+
+<script>
+    const blog_links = document.querySelectorAll('.specific-blog-link');
+    // const edit_btn = document.querySelector('.edit-btn');
+
+    blog_links.forEach( blog_link => {
+        blog_link.addEventListener('click', function (e) {
+            const doc_id = e.currentTarget.dataset.doc;
+            const endpoint = `/blogs/${doc_id}`;
+
+            window.location.href = endpoint;
+        });
+    })
+
+    // edit_btn.addEventListener('click', async function (e) {
+    //     const id = this.dataset.doc;
+
+    //     fetch('/edit-blog', {
+    //         body: JSON.stringify({id}),
+    //         headers: {'Content-Type': 'application/json'},
+    //     })
+    // })
+</script>

@@ -1,0 +1,37 @@
+<%- include('./partials/head.ejs') %>
+<%- include('./partials/nav.ejs') %>
+<div class="wrapper">
+    <form id="post-blog" class="poBlog-form">
+        <h2 class="form-title">po 文</h2>
+        <input type="text" name="title" required placeholder="文章標題">
+        <textarea name="body" required cols="40" rows="5" placeholder="文章內容..."></textarea>
+        <button class="btn poBlog">po文</button>
+    </form>
+</div>
+<%- include('./partials/footer.ejs') %>
+
+<script>
+    const post_blog_form = document.getElementById('post-blog');
+
+    post_blog_form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const title = this.title.value;
+        const body = this.body.value;
+
+        const res = await fetch('/po-blog', {
+            method: 'POST',
+            body: JSON.stringify({title, body}),
+            headers: {'Content-Type': 'application/json'},
+        });
+
+        const data = await res.json();
+
+        console.log(data);
+        if (data.blog) {
+            window.location.href = "/blogs";
+        } else {
+            alert('po文失敗!');
+        }
+    })
+</script>

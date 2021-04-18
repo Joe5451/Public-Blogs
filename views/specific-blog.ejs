@@ -1,0 +1,139 @@
+<%- include('./partials/head.ejs') %>
+<%- include('./partials/nav.ejs') %>
+<div class="wrapper">
+    <div class="blog-container">
+        <div class="blog-head">
+            <span class="author-gender <%= blog.author_gender %>">
+                <i class="fas fa-<%= blog.author_gender %>"></i>
+            </span>
+            <p class="author">
+                <span class="name"><%= blog.author %></span>
+                <span class="email">(<%= blog.author_email %>)</span>
+            </p>
+        </div>
+        <div class="blog-body nohover" data-doc="<%= blog._id %>">
+            <h3 class="title"><%= blog.title %></h3>
+            <pre><%= blog.body %></pre>
+        </div>
+        <div class="blog-footer">
+            <div class="msg-container">
+                <div class="msg-loading"><i class="fas fa-spinner"></i></div>            
+            </div>
+    
+            <form class="msg-form" data-doc="<%= blog._id %>">
+                <textarea name="message" spellcheck="false" cols="30" rows="1" data-doc="<%= blog._id %>" placeholder="請寫下你想說的話 =)"></textarea>
+                <button data-doc="<%= blog._id %>">
+                    <span class="show">送出</span>
+                    <i class="fas fa-spinner"></i>
+                </button>
+            </form>
+    
+        </div>
+    </div>
+</div>
+<%- include('./partials/footer.ejs') %>
+
+<script>
+    const msg_form = document.querySelector('.msg-form');
+    const msg_container = document.querySelector('.msg-container');
+    const submit_span = msg_form.querySelector('button>span');
+    const submit_loading = msg_form.querySelector('button>i');
+
+    showMsg();
+
+    msg_form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        submit_span.classList.remove('show');
+        submit_loading.classList.add('show');
+
+        const endpoint = `/leave-message/${msg_form.dataset.doc}`;
+        const body = msg_form.message.value;
+        const message = {
+            body,
+        };
+
+        const res = await fetch(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(message),
+            headers: {'Content-Type': 'application/json'},
+        });
+
+        const data = await res.json();
+
+        if (data.message) {
+            const msg = data.message;
+
+            console.log(data.message);
+
+            msg_form.message.value = "";
+            msg_container.innerHTML += `
+                <div class="msg">
+                    <span class="author-gender ${msg.gender}">
+                        <i class="fas fa-${msg.gender}"></i>
+                    </span>
+                    <p class="author">
+                        <span class="name">${msg.author}</span>
+                        <span class="email">${msg.email}</span>
+                    </p>
+                    <pre>${msg.body}</pre>
+                </div>
+                `;
+                
+        } else if (data.errors) {
+            alert(data.errors);
+        }
+
+        submit_loading.classList.remove('show');
+        submit_span.classList.add('show');
+        
+    })
+
+    function showMsg () {
+        const blog_body = document.querySelector('.blog-body');
+        const endpoint = `/get-message/${blog_body.dataset.doc}`;
+        const blog_footer = document.querySelector('.blog-footer');
+        const loading_element = blog_footer.querySelector('.msg-loading');
+
+        loading_element.classList.add('show');
+
+        fetch(endpoint, {
+            method: 'POST',
+        })
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            loading_element.classList.remove('show');
+            console.log(data.message);
+
+            const msgs = data.message;
+
+            if (msgs.length > 0) {
+                msg_container.innerHTML = '<p class="msg-title">留言</p>';
+                msgs.forEach(msg => {
+                    msg_container.innerHTML += `
+                    <div class="msg">
+                        <span class="author-gender ${msg.gender}">
+                            <i class="fas fa-${msg.gender}"></i>
+                        </span>
+                        <p class="author">
+                            <span class="name">${msg.author}</span>
+                            <span class="email">${msg.email}</span>
+                        </p>
+                        <pre>${msg.body}</pre>
+                    </div>
+                    `
+                })
+            } else {
+                msg_container.innerHTML = '<div class="no-msg">沒有留言喔!</div>';
+            }
+
+            msg_form.classList.add('show');
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
+</script>

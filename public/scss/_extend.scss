@@ -1,0 +1,37 @@
+%author-gender {
+    width: 32px;
+    height: 32px;
+    background: #BDBDBD;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 0.5rem;
+
+    i {
+        font-size: 18px;
+
+        &.fa-male {
+            color: #1976D2;
+        }
+
+        &.fa-female {
+            color: #EC407A;
+        }
+    }
+
+    &.male {
+        background: #4FC3F7;
+    }
+
+    &.female {
+        background: #ffcdd2;
+    }
+}
+
+%author {
+    span.email {
+        color: #9E9E9E;
+        font-size: 0.8rem;
+    }
+}

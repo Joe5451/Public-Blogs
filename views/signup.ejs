@@ -1,0 +1,59 @@
+<%- include('./partials/head.ejs') %>
+<%- include('./partials/nav.ejs') %>
+<div class="wrapper">
+    <form id="signup-form" class="signup-form">
+        <h2 class="form-title">註冊</h2>
+        <input type="text" name="name" placeholder="暱稱">
+        <div class="error name"></div>
+        <input type="text" name="email" placeholder="Email">
+        <div class="error email"></div>
+        <input type="password" name="password" placeholder="密碼">
+        <div class="error password"></div>
+        <label for="male" class="gender-radio">
+            <input type="radio" name="gender" id="male" value="male"> 男性
+        </label>
+        <label for="female" class="gender-radio">
+            <input type="radio" name="gender" id="female" value="female"> 女性
+        </label>
+        <div class="error gender"></div>
+        <button class="btn signup">註冊</button>
+    </form>
+</div>
+<%- include('./partials/footer.ejs') %>
+
+<script>
+    const signup_form = document.getElementById('signup-form');
+    const error_name = document.querySelector('.error.name');
+    const error_email = document.querySelector('.error.email');
+    const error_password = document.querySelector('.error.password');
+    const error_gender = document.querySelector('.error.gender');
+
+    signup_form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = e.currentTarget.name.value;
+        const email = e.currentTarget.email.value;
+        const password = e.currentTarget.password.value;
+        const gender = e.currentTarget.gender.value;
+        console.log(gender);
+        
+        const res = await fetch('/signup', {
+            method: 'POST',
+            body: JSON.stringify({name, email, password, gender}),
+            headers: {'Content-Type': 'application/json'},
+        });
+
+        const data = await res.json();
+
+        if (data.user) {
+            window.location.href = '/login';
+        } else if (data.errors) {
+            console.log(data.errors);
+
+            const errors = data.errors;
+            error_name.innerHTML = errors.name;
+            error_email.innerHTML = errors.email;
+            error_password.innerHTML = errors.password;
+            error_gender.innerHTML = errors.gender;
+        }
+    });
+</script>

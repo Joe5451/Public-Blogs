@@ -1,0 +1,58 @@
+<%- include('./partials/head.ejs') %>
+<%- include('./partials/nav.ejs') %>
+<div class="wrapper">
+    <form id="edit-form" class="edit-form" data-doc="<%= blog._id %>">
+        <h2 class="form-title">編輯</h2>
+        <input type="text" name="title" required placeholder="文章標題" value="<%= blog.title %>">
+        <textarea name="body" required spellcheck="false" placeholder="文章內容..."><%= blog.body %></textarea>
+        
+        <div class="btn-container">
+            <button class="update-blog btn">變更</button>
+            <button class="delete-blog btn">刪除</button>
+        </div>
+    </form>
+</div>
+<%- include('./partials/footer.ejs') %>
+
+<script>
+const edit_form = document.getElementById('edit-form');
+const update_blog_btn = document.querySelector('.update-blog.btn');
+const delete_blog_btn = document.querySelector('.delete-blog.btn');
+
+edit_form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+})
+
+update_blog_btn.addEventListener('click', updateOrDeleteBlog);
+delete_blog_btn.addEventListener('click', updateOrDeleteBlog);
+
+async function updateOrDeleteBlog (e) {
+    const endpoint = `/edit-blog/${edit_form.dataset.doc}`;
+    const title = edit_form.title.value;
+    const body = edit_form.body.value;
+    let method = "";
+
+    console.log(e.target);
+
+    if (e.target.classList.contains('update-blog')) {
+        method = "PUT";
+    } else if (e.target.classList.contains('delete-blog')) {
+        method = "DELETE";
+    }
+
+    const res = await fetch(endpoint, {
+        method,
+        body: JSON.stringify({title, body}),
+        headers: {'Content-Type': 'application/json'},
+    });
+
+    const data = await res.text();
+    console.log(data);
+
+    if (data === '變更成功') {
+        window.location.href = '/my-blogs';
+    } else if (data === '刪除成功') {
+        window.location.href = '/my-blogs';
+    }
+}
+</script>
